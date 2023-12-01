@@ -32,9 +32,14 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
     <title>Ynet News Flash - by Elad Bar</title>
   </head>
-  <body>
+  <body id="root">
     <span class="arrow-up">
       <i class="fas fa-angle-double-up"></i>
     </span>
@@ -65,6 +70,15 @@
       <h1 class="clock-time"></h1>
       <h2 class="clock-date"></h2>
     </div>
+    <div class="weather"></div>
+    <iframe
+      src="https://glgltz-playlist.netlify.app/"
+      frameborder="0"
+    ></iframe>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
     <script src="./app.js"></script>
   </body>
 </html>
