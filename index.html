@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <link
+      rel="icon"
+      href="./ynetIcon.png"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"
+      integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <title>Ynet News Flash - by Elad Bar</title>
+  </head>
+  <body>
+    <span class="arrow-up">
+      <i class="fas fa-angle-double-up"></i>
+    </span>
+
+    <div
+      class="main-header"
+      onclick="getData()"
+    >
+      <h1 class="news-header">מבזקי חדשות</h1>
+      <img
+        src="./ynet320.png"
+        alt="ynet-logo"
+        height="53px"
+        class="logo"
+      />
+    </div>
+    <div class="news-card">
+      <div class="spinner">
+        <h1 style="text-align: center; color: gold">בטעינה...</h1>
+        <img
+          id="loading-spinner"
+          src="./spinner.gif"
+          alt="loading-spinner"
+        />
+      </div>
+    </div>
+    <div class="clock">
+      <h1 class="clock-time"></h1>
+      <h2 class="clock-date"></h2>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
