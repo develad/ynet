@@ -348,18 +348,66 @@ import fs from 'fs';
 //     );
 //   });
 
-const shownAlerts = [];
+const data = [
+  {
+    notificationId: '20cf7a83-7ecd-4e4a-896f-d73d46dd2802',
+    time: 1702202205,
+    threat: 0,
+    isDrill: false,
+    cities: ['יד מרדכי', 'נתיב העשרה'],
+  },
+  {
+    notificationId: 'cfb22a75-8777-4195-a08f-139a91babb02',
+    time: 1702206929,
+    threat: 0,
+    isDrill: false,
+    cities: ['נתיב העשרה'],
+  },
+];
+const fakeData = [
+  {
+    notificationId: 'cfb22a75-8777-4195-a08f-139a91babb02',
+    time: 1702206929,
+    threat: 0,
+    isDrill: false,
+    cities: ['נתיב העשרה'],
+  },
+  {
+    notificationId: 'ff268978-4737-47d6-b127-59e8d2db1549',
+    time: 1702205108,
+    threat: 0,
+    isDrill: false,
+    cities: ['נחל עוז'],
+  },
+];
+let ids = [];
+let shownData = [];
 const getRedAlert = async () => {
   // _audio.pause();
-  const res = await fetch('https://api.tzevaadom.co.il/notifications');
-  let data = await res.json();
+  //   const res = await fetch('https://api.tzevaadom.co.il/notifications');
+  //   let data = await res.json();
 
-  //   console.log(data.length);
-  if (data.length !== 0) {
-    console.log('Data Received!');
-    console.log(data);
-    fs.appendFileSync('data.json', JSON.stringify(data, null, 2), 'utf-8');
-  }
+  //   //   console.log(data.length);
+  //   if (data.length !== 0) {
+  //     console.log('Data Received!');
+  //     console.log(data);
+  //     fs.appendFileSync('data.json', JSON.stringify(data, null, 2), 'utf-8');
+  //   }
+
+  const freshData = data.map((item) => ({
+    ...item,
+    time: item.time * 1000,
+    isShown: false,
+  }));
+
+  ids = shownData.map((item) => item.notificationId);
+
+  const fliterdData = freshData?.filter(
+    (item) => !ids.includes(item.notificationId)
+  );
+
+  shownData = [...shownData, ...fliterdData];
+  console.log(fliterdData);
 };
 
 getRedAlert();
