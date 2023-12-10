@@ -7,65 +7,78 @@ const _clockDate = document.querySelector('.clock-date');
 const _weather = document.querySelector('.weather');
 const _audio = new Audio('./alarm_sound.mp3');
 
+const RenderAlertsToScreen = (alertsToShow) => {
+  alertsToShow.reverse().map((item, index) => {
+    if (index === 0) {
+      _audio.play();
+    }
+
+    item.isDrill === false &&
+      Toastify({
+        text: `<span style="padding: 0 0.5rem;flex:1;text-align:center;">${moment(
+          new Date(item.time)
+        )
+          .locale('he')
+          .format('HH:mm')} - ${item.cities.join(' , ')}</span>`,
+        // Display the alert notification on the screen for 30 secondes
+        duration: 1000 * 30,
+        newWindow: true,
+        close: true,
+        escapeMarkup: false,
+        gravity: 'top', // `top` or `bottom`
+        position: 'right', // `left`, `center` or `right`
+        stopOnFocus: false, // Prevents dismissing of toast on hover
+        style: {
+          background:
+            'linear-gradient(to right, rgb(182 1 21), rgb(255 91 78))',
+        },
+        avatar: './Pakar.png',
+      }).showToast();
+  });
+};
+
+// const exampleData = [
+//   {
+//     notificationId: 'cfb22a75-8777-4195-a08f-139a91babb02',
+//     time: 1702206929,
+//     threat: 0,
+//     isDrill: false,
+//     cities: ['נתיב העשרה'],
+//   },
+//   {
+//     notificationId: 'ff268978-4737-47d6-b127-59e8d2db1549',
+//     time: 1702205108,
+//     threat: 0,
+//     isDrill: false,
+//     cities: ['נחל עוז'],
+//   },
+// ];
+
+let ids = [];
+let shownData = [];
 const getRedAlert = async () => {
-  // _audio.pause();
   const res = await fetch(
-    'https://api.codetabs.com/v1/proxy?quest=https://api.tzevaadom.co.il/alerts-history'
+    'https://dark-gray-snail-ring.cyclic.app/redAlertNotifications'
   );
   let data = await res.json();
 
-  data = data
-    .map((alert) =>
-      alert.alerts.filter(
-        (item) =>
-          // Filtering alerts from the last 10 minutes that are NOT a drill
-          Math.floor(Date.now() / 1000) - item.time < 60 * 10 &&
-          item.isDrill === false
-      )
-    )
-    // Filtering empty arrays
-    .filter((item) => item.length !== 0)
-    // Setting the time property to standard epoch time
-    .map((item) => item.map((item) => ({ ...item, time: item.time * 1000 })))
-    // Reversing the array to show the alerts from recent to old at the top of the document
-    .reverse();
+  data = data.map((item) => ({
+    ...item,
+    time: item.time * 1000,
+  }));
 
-  data.map((item) =>
-    item.map((item, index) => {
-      if (new Date() - new Date(item.time) < 1000 * 60) {
-        if (index === 0) {
-          // _audio.load();
-          _audio.play();
-          // _audio.loop = true;
-        }
-        Toastify({
-          text: `<span style="padding: 0 0.5rem;flex:1">${moment(
-            new Date(item.time)
-          )
-            .locale('he')
-            .format('HH:mm')} - ${item.cities.join(' , ')}</span>`,
-          // Display the alert notification on the screen for 30 secondes
-          duration: 5000,
-          // destination: "https://github.com/apvarun/toastify-js",
-          newWindow: true,
-          close: true,
-          escapeMarkup: false,
-          gravity: 'top', // `top` or `bottom`
-          position: 'right', // `left`, `center` or `right`
-          stopOnFocus: false, // Prevents dismissing of toast on hover
-          style: {
-            background: 'linear-gradient(to right, #cb2d3e, #ef473a)',
-          },
-          avatar: './Pakar.png',
-          // onClick: function () {}, // Callback after click
-        }).showToast();
-      }
-    })
+  ids = shownData.map((item) => item.notificationId);
+
+  const fliterdData = data?.filter(
+    (item) => !ids.includes(item.notificationId)
   );
+
+  shownData = [...shownData, ...fliterdData];
+  fliterdData.length !== 0 && RenderAlertsToScreen(fliterdData);
 };
 
 getRedAlert();
-setInterval(getRedAlert, 5000);
+setInterval(getRedAlert, 1000);
 
 const getWeather = async () => {
   const res = await fetch(
