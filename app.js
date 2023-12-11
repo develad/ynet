@@ -7,32 +7,22 @@ const _clockDate = document.querySelector('.clock-date');
 const _weather = document.querySelector('.weather');
 const _audio = new Audio('./alarm_sound.mp3');
 
-// const convertToEpochTime = (data) =>
-//   data.map((item) => ({
-//     ...item,
-//     alerts: item.alerts.map((item) => ({ ...item, time: item.time * 1000 })),
-//   }));
-
 const RenderAlertsToScreen = (alertsToShow) => {
   console.log('alertsToShow: ', alertsToShow);
-  alertsToShow.reverse().map(
-    (item, index) => {
-      // item.alerts.map((item, index) => {
-      // if (new Date() - new Date(item.time) < 1000) {
-      if (index === 0) {
-        // _audio.load();
-        _audio.play();
-        // _audio.loop = true;
-      }
+  alertsToShow.reverse().map((item, index) => {
+    if (index === 0) {
+      _audio.play();
+    }
+
+    item.isDrill === false &&
       Toastify({
-        text: `<span style="padding: 0 0.5rem;flex:1">${moment(
+        text: `<span style="padding: 0 0.5rem;flex:1;text-align:center;">${moment(
           new Date(item.time)
         )
           .locale('he')
           .format('HH:mm')} - ${item.cities.join(' , ')}</span>`,
         // Display the alert notification on the screen for 30 secondes
         duration: 1000 * 30,
-        // destination: "https://github.com/apvarun/toastify-js",
         newWindow: true,
         close: true,
         escapeMarkup: false,
@@ -40,17 +30,15 @@ const RenderAlertsToScreen = (alertsToShow) => {
         position: 'right', // `left`, `center` or `right`
         stopOnFocus: false, // Prevents dismissing of toast on hover
         style: {
-          background: 'linear-gradient(to right, #cb2d3e, #ef473a)',
+          background:
+            'linear-gradient(to right, rgb(182 1 21), rgb(255 91 78))',
         },
         avatar: './Pakar.png',
       }).showToast();
-    }
-    // }
-  );
-  // );
+  });
 };
 
-// const fakeData = [
+// const exampleData = [
 //   {
 //     notificationId: 'cfb22a75-8777-4195-a08f-139a91babb02',
 //     time: 1702206929,
@@ -70,46 +58,11 @@ const RenderAlertsToScreen = (alertsToShow) => {
 let ids = [];
 let shownData = [];
 const getRedAlert = async () => {
-  // _audio.pause();
   const res = await fetch(
     'https://dark-gray-snail-ring.cyclic.app/redAlertNotifications'
   );
   let data = await res.json();
-  // let data = fakeData;
   console.log('data: ', data);
-
-  // data = data
-  //   .map((alert) =>
-  //     alert.alerts.filter(
-  //       (item) =>
-  //         // Filtering alerts from the last 10 minutes that are NOT a drill
-  //         Math.floor(Date.now() / 1000) - item.time < 60 * 10 &&
-  //         item.isDrill === false
-  //     )
-  //   )
-  //   // Filtering empty arrays
-  //   .filter((item) => item.length !== 0)
-  //   // Setting the time property to standard epoch time
-  //   .map((item) => item.map((item) => ({ ...item, time: item.time * 1000 })))
-  //   // Reversing the array to show the alerts from recent to old at the top of the document
-  //   .reverse();
-
-  // data = convertToEpochTime(data);
-
-  // ids = data.map((item) => item.id).slice(1);
-
-  // console.log(data);
-
-  // const filteredNewAlerts = data.filter((item) => {
-  //   return !ids.includes(item.id);
-  // });
-
-  // console.log('filteredNewAlerts: ', filteredNewAlerts);
-
-  // if (filteredNewAlerts.length !== 0) {
-  //   _audio.pause();
-  //   _audio.loop = false;
-  // }
 
   data = data.map((item) => ({
     ...item,
