@@ -5,7 +5,33 @@ const arrowUp = document.querySelector('.arrow-up');
 const _clockTime = document.querySelector('.clock-time');
 const _clockDate = document.querySelector('.clock-date');
 const _weather = document.querySelector('.weather');
-const _audio = new Audio('./alarm_sound.mp3');
+const _audio = new Audio('./alarm-sound.wav');
+
+const threats = {
+  0: {
+    category: 1,
+    code: 'missilealert',
+    duration: 10,
+    label: 'ירי רקטות וטילים',
+    description1: 'היכנסו למרחב המוגן ושהו בו 10 דקות',
+    description2: '',
+    link1: '',
+    link2: 'https://www.oref.org.il/12943-he/pakar.aspx',
+    matrixid: 1,
+  },
+  5: {
+    category: 2,
+    code: 'uav',
+    duration: 10,
+    label: 'חדירת כלי טיס עוין',
+    description1:
+      'היכנסו מיד למרחב המוגן ושהו בו למשך 10 דקות, אלא אם ניתנה התרעה נוספת',
+    description2: '',
+    link1: '',
+    link2: 'https://www.oref.org.il/12754-he/pakar.aspx',
+    matrixid: 6,
+  },
+};
 
 const RenderAlertsToScreen = (alertsToShow) => {
   alertsToShow.reverse().map((item, index) => {
@@ -15,11 +41,27 @@ const RenderAlertsToScreen = (alertsToShow) => {
 
     item.isDrill === false &&
       Toastify({
-        text: `<span style="padding: 0 0.5rem;flex:1;text-align:center;">${moment(
+        text: `
+    <div style="display:flex;flex-direction: column;width:100%;padding: 0 0.5rem;line-height: 1.2;font-size:1.5rem;gap:0.5rem">
+        <div style="display:flex;justify-content: space-between;align-items: center;"><span style="">${moment(
           new Date(item.time)
         )
           .locale('he')
-          .format('HH:mm')} - ${item.cities.join(' , ')}</span>`,
+          .format('HH:mm')}${
+          threats[item.threat]?.label
+            ? ` - ${threats[item.threat].label}`
+            : ' - התראת צבע אדום'
+        }</span><img src='./PakarLogo.png'/></div>
+      <hr/>
+      <div style="flex:1;">${item.cities.join(' , ')}</div>
+    <hr/>
+    <div>${
+      threats[item.threat]?.description1
+        ? threats[item.threat].description1
+        : 'יש להיכנס לאתר פיקוד העורף ולפעול בהתאם להנחיות'
+    }</div>
+    </div>
+      `,
         // Display the alert notification on the screen for 30 secondes
         duration: 1000 * 30,
         newWindow: true,
@@ -29,10 +71,8 @@ const RenderAlertsToScreen = (alertsToShow) => {
         position: 'right', // `left`, `center` or `right`
         stopOnFocus: false, // Prevents dismissing of toast on hover
         style: {
-          background:
-            'linear-gradient(to right, rgb(182 1 21), rgb(255 91 78))',
+          background: 'linear-gradient(to right, #cb2d3e, #ef473a)',
         },
-        avatar: './Pakar.png',
       }).showToast();
   });
 };
@@ -48,11 +88,13 @@ const RenderAlertsToScreen = (alertsToShow) => {
 //   {
 //     notificationId: 'ff268978-4737-47d6-b127-59e8d2db1549',
 //     time: 1702205108,
-//     threat: 0,
+//     threat: 5,
 //     isDrill: false,
 //     cities: ['נחל עוז'],
 //   },
 // ];
+
+// RenderAlertsToScreen(exampleData);
 
 let ids = [];
 let shownData = [];
@@ -102,6 +144,7 @@ const getWeather = async () => {
 };
 
 getWeather();
+setInterval(getWeather, 1000 * 60 * 60);
 
 const getData = async () => {
   spinner.style.display = 'block';
