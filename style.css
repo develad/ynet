@@ -43,6 +43,7 @@ body {
   justify-content: flex-start;
   font-size: 1.2rem;
 }
+
 .news-header {
   font-size: 3rem;
   color: gold;
@@ -130,7 +131,7 @@ body {
   width: 80px;
   font-size: 3em;
   position: fixed;
-  right: 80px;
+  right: 280px;
   left: auto;
   bottom: 10px;
   cursor: pointer;
@@ -170,7 +171,7 @@ body {
   cursor: default;
 }
 
-iframe {
+.glgltz {
   position: fixed;
   bottom: 80px;
   right: 40px;
@@ -206,7 +207,7 @@ iframe {
 
 .clock:hover,
 .weather:hover,
-iframe:hover {
+.glgltz:hover {
   opacity: 1;
 }
 
@@ -271,7 +272,7 @@ iframe:hover {
   }
   .clock,
   .weather,
-  iframe {
+  .glgltz {
     display: none;
   }
 
@@ -284,7 +285,7 @@ iframe:hover {
 @media screen and (max-width: 1480px) {
   .clock,
   .weather,
-  iframe {
+  .glgltz {
     display: none;
   }
 }

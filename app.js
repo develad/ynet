@@ -157,11 +157,36 @@ const getData = async () => {
   card.classList.add('move-news-card');
   card.innerHTML = '';
   data.forEach((item) => {
+    let whatsAppTextStr =
+      '*מבזקי Ynet*' +
+      '%0a%0a' +
+      item.publish_time +
+      '%0a%0a' +
+      item.headline +
+      '%0a%0a' +
+      item.content +
+      '%0a%0a' +
+      item.link;
+    whatsAppTextStr = whatsAppTextStr
+      .replaceAll('"', '&quot;')
+      .replaceAll('#', '%23');
     card.innerHTML += `
         <div class="card">
         <p>${item.publish_time}</p>
         <h1>${item.headline}</h1>
         <h3>${item.content}</h3>
+       <div style="margin-top:1rem;display: flex;align-items:center;justify-content: end;margin-bottom:-0.50rem;
+       ">
+        <a
+          style="color: inherit; text-decoration: none;background:rgba(128, 128, 128, 0.3);border-radius:50%;padding:20px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;"
+          href="https://api.whatsapp.com/send?text=${whatsAppTextStr}"
+          
+          target="_blank"
+          ><span
+            style="font-size: 1.4rem; color: greenyellow"
+            ><i class="fab fa-whatsapp"></i
+          ></span>
+        </a>
         </div>
         `;
   });
