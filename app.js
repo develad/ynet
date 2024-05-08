@@ -9,12 +9,26 @@ const body = document.querySelector('body');
 
 const button = document.querySelector('#btn');
 
-button.addEventListener('change', (e) => {
-  body.classList.toggle('light-mode');
+const changeTheme = (isDark) => {
+  localStorage.setItem('isDark', JSON.stringify(isDark));
+  button.checked = isDark;
+  if (isDark) {
+    body.classList.remove('light-mode');
+  } else {
+    body.classList.add('light-mode');
+  }
+};
+
+let isDark = JSON.parse(localStorage.getItem('isDark')) ?? true;
+changeTheme(isDark);
+
+button.addEventListener('change', () => {
+  isDark = !isDark;
+  changeTheme(isDark);
 });
 
 let isShowing = false;
-_radio_btn.addEventListener('click', (e) => {
+_radio_btn.addEventListener('click', () => {
   isShowing = !isShowing;
   isShowing
     ? (_glgltz.style.display = 'block')
