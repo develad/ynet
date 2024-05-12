@@ -119,12 +119,13 @@ const getRedAlert = async () => {
   fliterdData.length !== 0 && RenderAlertsToScreen(fliterdData);
 };
 
-getRedAlert();
-setInterval(getRedAlert, 1000);
+// getRedAlert();
+// setInterval(getRedAlert, 1000);
 
 const getWeather = async () => {
   const res = await fetch(
-    'https://dark-gray-snail-ring.cyclic.app/minimal-forecast'
+    // 'https://dark-gray-snail-ring.cyclic.app/minimal-forecast'
+    'https://mainserver-bhss.onrender.com/minimal-forecast'
   );
   const data = await res.json();
   _weather.innerHTML =
@@ -149,7 +150,8 @@ setInterval(getWeather, 1000 * 60 * 60);
 const getData = async () => {
   spinner.style.display = 'block';
   logo.classList.remove('logo-flip');
-  const res = await fetch('https://dark-gray-snail-ring.cyclic.app/ynet-news');
+  // const res = await fetch('https://dark-gray-snail-ring.cyclic.app/ynet-news');
+  const res = await fetch('https://mainserver-bhss.onrender.com/ynet-news');
   let data = await res.json();
   data = data.reverse();
   spinner.style.display = 'none';
