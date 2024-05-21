@@ -100,7 +100,8 @@ let ids = [];
 let shownData = [];
 const getRedAlert = async () => {
   const res = await fetch(
-    'https://dark-gray-snail-ring.cyclic.app/redAlertNotifications'
+    // 'https://dark-gray-snail-ring.cyclic.app/redAlertNotifications'
+    'https://mainserver-bhss.onrender.com/redAlertNotifications'
   );
   let data = await res.json();
 
