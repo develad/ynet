@@ -119,8 +119,8 @@ const getRedAlert = async () => {
   fliterdData.length !== 0 && RenderAlertsToScreen(fliterdData);
 };
 
-// getRedAlert();
-// setInterval(getRedAlert, 1000);
+getRedAlert();
+setInterval(getRedAlert, 1000);
 
 const getWeather = async () => {
   const res = await fetch(
