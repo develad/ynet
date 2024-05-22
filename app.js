@@ -126,7 +126,8 @@ setInterval(getRedAlert, 1000);
 const getWeather = async () => {
   const res = await fetch(
     // 'https://dark-gray-snail-ring.cyclic.app/minimal-forecast'
-    'https://mainserver-bhss.onrender.com/minimal-forecast'
+    // 'https://mainserver-bhss.onrender.com/minimal-forecast'
+    'https://express-gcloud-424017.oa.r.appspot.com//minimal-forecast'
   );
   const data = await res.json();
   _weather.innerHTML =
@@ -152,7 +153,8 @@ const getData = async () => {
   spinner.style.display = 'block';
   logo.classList.remove('logo-flip');
   // const res = await fetch('https://dark-gray-snail-ring.cyclic.app/ynet-news');
-  const res = await fetch('https://mainserver-bhss.onrender.com/ynet-news');
+  // const res = await fetch('https://mainserver-bhss.onrender.com/ynet-news');
+  const res = await fetch('https://express-gcloud-424017.oa.r.appspot.com/ynet-news');
   let data = await res.json();
   data = data.reverse();
   spinner.style.display = 'none';
