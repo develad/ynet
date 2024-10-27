@@ -154,7 +154,12 @@ function distanceBetween(time) {
   return moment(time_before).locale('he').fromNow();
 }
 
+let clearDistanceArray = [];
+
 const getData = async () => {
+  // Clearing all distance setIntervals
+  clearDistanceArray.map((item) => clearInterval(item));
+  clearDistanceArray = [];
   spinner.style.display = 'block';
   logo.classList.remove('logo-flip');
   // const res = await fetch('https://dark-gray-snail-ring.cyclic.app/ynet-news');
@@ -168,7 +173,7 @@ const getData = async () => {
   logo.classList.add('logo-flip');
   card.classList.add('move-news-card');
   card.innerHTML = '';
-  data.forEach((item, index) => {
+  data.forEach((item) => {
     let whatsAppTextStr =
       '*מבזקי Ynet*' +
       '%0a%0a' +
@@ -186,7 +191,9 @@ const getData = async () => {
     card.innerHTML += `
         <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-          <p id="distance_${index}"></p>
+          <p id="distance_${item.time.replaceAll(/[-:.]+/g, '_')}">
+          <span style="color:#19ffca">${distanceBetween(item.time)}</span>
+          </p>
           <p>${moment(new Date(item.time)).locale('he').format('HH:mm')}</p>
         </div>
         <h1>${item.headline}</h1>
@@ -205,14 +212,18 @@ const getData = async () => {
         </a>
         </div>
         `;
-    setInterval(() => {
-      const distance = document.querySelector(`#distance_${index}`);
+    const clearDistance = setInterval(() => {
+      const distance = document.querySelector(
+        `#distance_${item.time.replaceAll(/[-:.]+/g, '_')}`
+      );
 
       distance.innerHTML =
         distance.textContent === distanceBetween(item.time)
           ? `<span style="color:white">${distanceBetween(item.time)}</span>`
           : `<span style="color:#19ffca">${distanceBetween(item.time)}</span>`;
     }, 1000);
+
+    clearDistanceArray.push(clearDistance);
   });
 
   setTimeout(() => {
