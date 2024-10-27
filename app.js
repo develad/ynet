@@ -149,19 +149,26 @@ const getWeather = async () => {
 getWeather();
 setInterval(getWeather, 1000 * 60 * 60);
 
+function distanceBetween(time) {
+  const time_before = new Date(time);
+  return moment(time_before).locale('he').fromNow();
+}
+
 const getData = async () => {
   spinner.style.display = 'block';
   logo.classList.remove('logo-flip');
   // const res = await fetch('https://dark-gray-snail-ring.cyclic.app/ynet-news');
   // const res = await fetch('https://mainserver-bhss.onrender.com/ynet-news');
-  const res = await fetch('https://express-gcloud-424017.oa.r.appspot.com/ynet-news');
+  const res = await fetch(
+    'https://express-gcloud-424017.oa.r.appspot.com/ynet-news'
+  );
   let data = await res.json();
   data = data.reverse();
   spinner.style.display = 'none';
   logo.classList.add('logo-flip');
   card.classList.add('move-news-card');
   card.innerHTML = '';
-  data.forEach((item) => {
+  data.forEach((item, index) => {
     let whatsAppTextStr =
       '*מבזקי Ynet*' +
       '%0a%0a' +
@@ -175,9 +182,13 @@ const getData = async () => {
     whatsAppTextStr = whatsAppTextStr
       .replaceAll('"', '&quot;')
       .replaceAll('#', '%23');
+
     card.innerHTML += `
         <div class="card">
-        <p>${item.publish_time}</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+          <p id="distance_${index}"></p>
+          <p>${moment(new Date(item.time)).locale('he').format('HH:mm')}</p>
+        </div>
         <h1>${item.headline}</h1>
         <h3>${item.content}</h3>
        <div style="margin-top:1rem;display: flex;align-items:center;justify-content: end;margin-bottom:-0.50rem;
@@ -194,7 +205,16 @@ const getData = async () => {
         </a>
         </div>
         `;
+    setInterval(() => {
+      const distance = document.querySelector(`#distance_${index}`);
+
+      distance.innerHTML =
+        distance.textContent === distanceBetween(item.time)
+          ? `<span style="color:white">${distanceBetween(item.time)}</span>`
+          : `<span style="color:#19ffca">${distanceBetween(item.time)}</span>`;
+    }, 1000);
   });
+
   setTimeout(() => {
     card.classList.remove('move-news-card');
   }, 800);
