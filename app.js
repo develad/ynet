@@ -7,6 +7,43 @@ const _clockDate = document.querySelector('.clock-date');
 const _weather = document.querySelector('.weather');
 const _audio = new Audio('./alarm-sound.wav');
 
+// moment.updateLocale('he', {
+//   relativeTime: {
+//     future: 'בעוד %s',
+//     past: '%s לפני',
+//     s: 'לפני %d שניות',
+//     ss: 'לפני מספר שניות',
+//     m: 'לפני כדקה',
+//     mm: 'לפני %d דקות',
+//     h: 'לפני כשעה',
+//     hh: 'לפני %d שעות',
+//     d: 'לפני כיום',
+//     dd: 'לפני %d ימים',
+//     w: 'לפני שבוע',
+//     ww: 'לפני %d דקות',
+//     M: 'לפני כחודש',
+//     MM: 'לפני %d חודשים',
+//     y: 'לפני שנה',
+//     yy: 'לפני %d שנים',
+//   },
+// });
+
+//  // Retrieve existing thresholds
+//  moment().relativeTimeThreshold('ss'); // 44
+//  moment().relativeTimeThreshold('s');  // 45
+//  moment().relativeTimeThreshold('m');  // 45
+//  moment().relativeTimeThreshold('h');  // 22
+//  moment().relativeTimeThreshold('d');  // 26
+//  moment().relativeTimeThreshold('w');  // null (disabled)
+//  moment().relativeTimeThreshold('M');  // 11
+
+// Set new thresholds
+moment.relativeTimeThreshold('ss', 10);
+moment.relativeTimeThreshold('s', 60);
+moment.relativeTimeThreshold('m', 60);
+moment.relativeTimeThreshold('h', 24);
+moment.relativeTimeThreshold('d', 28);
+
 const threats = {
   0: {
     category: 1,
@@ -190,10 +227,16 @@ const getData = async () => {
 
     card.innerHTML += `
         <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+          <div style="display:flex;align-items:baseline;gap:0.5rem;">
+          <span id="watch_${item.time.replaceAll(
+            /[-:.]+/g,
+            '_'
+          )}"style="font-size:1rem;"><i class="far fa-clock"></i></span>
           <p id="distance_${item.time.replaceAll(/[-:.]+/g, '_')}">
-          <span style="color:#19ffca">${distanceBetween(item.time)}</span>
-          </p>
+            <span style="color:#19ffca">${distanceBetween(item.time)}</span>
+            </p>
+          </div>
           <p>${moment(new Date(item.time)).locale('he').format('HH:mm')}</p>
         </div>
         <h1>${item.headline}</h1>
@@ -216,11 +259,21 @@ const getData = async () => {
       const distance = document.querySelector(
         `#distance_${item.time.replaceAll(/[-:.]+/g, '_')}`
       );
+      const watch = document.querySelector(
+        `#watch_${item.time.replaceAll(/[-:.]+/g, '_')}`
+      );
 
-      distance.innerHTML =
-        distance.textContent === distanceBetween(item.time)
-          ? `<span style="color:white">${distanceBetween(item.time)}</span>`
-          : `<span style="color:#19ffca">${distanceBetween(item.time)}</span>`;
+      if (distance.textContent === distanceBetween(item.time)) {
+        watch.classList.remove('spin');
+        distance.innerHTML = `<span style="color:white">${distanceBetween(
+          item.time
+        )}</span>`;
+      } else {
+        watch.classList.add('spin');
+        distance.innerHTML = `<span style="color:#19ffca">${distanceBetween(
+          item.time
+        )}</span>`;
+      }
     }, 1000);
 
     clearDistanceArray.push(clearDistance);

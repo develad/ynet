@@ -53,7 +53,7 @@ body {
 .card {
   width: 650px;
   margin-top: 2rem;
-  padding-bottom: 1rem;
+  padding-bottom: 1.4rem;
   border-bottom: 4px solid white;
 }
 
@@ -123,6 +123,22 @@ body {
 @keyframes flip {
   to {
     transform: rotateY(360deg);
+  }
+}
+
+.spin {
+  animation: spin 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
   }
 }
 
@@ -230,6 +246,9 @@ body {
 }
 
 @media screen and (max-width: 768px) {
+  body {
+    padding-top: 1.8rem;
+  }
   .news-card {
     max-width: calc(100vw - 3rem);
   }
