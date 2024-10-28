@@ -194,6 +194,11 @@ function distanceBetween(time) {
 let clearDistanceArray = [];
 
 const getData = async () => {
+  const lastUpdated = document.querySelector('.last-updated');
+  if (lastUpdated)
+    lastUpdated.innerHTML = `<div>
+  <span><i class="fas fa-retweet spin-infinite"></i></span>
+  מעדכן כעת מבזקים ...</div>`;
   // Clearing all distance setIntervals
   clearDistanceArray.map((item) => clearInterval(item));
   clearDistanceArray = [];
@@ -212,10 +217,8 @@ const getData = async () => {
   card.innerHTML = '';
   card.innerHTML = `<div class="last-updated">
   <span><i class="fas fa-retweet"></i></span>
-  עודכן לאחרונה ב ${moment(new Date())
-    .locale('he')
-    .format('HH:mm')
-    .trim()}</div>`;
+  עודכן לאחרונה ב ${moment(new Date()).locale('he').format('HH:mm').trim()}
+    </div>`;
 
   data.forEach((item) => {
     let whatsAppTextStr =

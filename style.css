@@ -129,6 +129,9 @@ body {
 .spin {
   animation: spin 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
+.spin-infinite {
+  animation: bounce 0.4s infinite;
+}
 
 @keyframes spin {
   0% {
@@ -142,6 +145,23 @@ body {
   }
 }
 
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  25% {
+    transform: rotate(-22.5deg);
+  }
+  75% {
+    transform: rotate(22.5deg);
+  }
+}
 .arrow-up {
   height: 80px;
   width: 80px;
