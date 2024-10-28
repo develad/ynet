@@ -245,6 +245,14 @@ body {
   }
 }
 
+.last-updated {
+  margin-left: auto;
+  padding-top: 2rem;
+  font-weight: bold;
+  border-bottom: 1px solid white;
+  width: fit-content;
+}
+
 @media screen and (max-width: 768px) {
   body {
     padding-top: 1.8rem;

@@ -210,6 +210,13 @@ const getData = async () => {
   logo.classList.add('logo-flip');
   card.classList.add('move-news-card');
   card.innerHTML = '';
+  card.innerHTML = `<div class="last-updated">
+  <span><i class="fas fa-retweet"></i></span>
+  עודכן לאחרונה ב ${moment(new Date())
+    .locale('he')
+    .format('HH:mm')
+    .trim()}</div>`;
+
   data.forEach((item) => {
     let whatsAppTextStr =
       '*מבזקי Ynet*' +
