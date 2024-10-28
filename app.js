@@ -164,7 +164,7 @@ const getWeather = async () => {
   const res = await fetch(
     // 'https://dark-gray-snail-ring.cyclic.app/minimal-forecast'
     // 'https://mainserver-bhss.onrender.com/minimal-forecast'
-    'https://express-gcloud-424017.oa.r.appspot.com//minimal-forecast'
+    'https://express-gcloud-424017.oa.r.appspot.com/minimal-forecast'
   );
   const data = await res.json();
   _weather.innerHTML =
@@ -237,7 +237,23 @@ const getData = async () => {
             <span style="color:#19ffca">${distanceBetween(item.time)}</span>
             </p>
           </div>
-          <p>${moment(new Date(item.time)).locale('he').format('HH:mm')}</p>
+          <p>
+            ${
+              moment(new Date(item.time))
+                .locale('he')
+                .calendar()
+                .split(' ')[0]
+                .includes('היום')
+                ? ''
+                : `${
+                    moment(new Date(item.time))
+                      .locale('he')
+                      .calendar()
+                      .split(' ')[0]
+                  } | `
+            }
+            ${moment(new Date(item.time)).locale('he').format('HH:mm')} 
+            </p>
         </div>
         <h1>${item.headline}</h1>
         <h3>${item.content}</h3>
