@@ -102,7 +102,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #111;
+  background: transparent;
 }
 
 #loading-spinner {
@@ -129,7 +129,7 @@ body {
 .spin {
   animation: spin 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
-.spin-infinite {
+.bounce-infinite {
   animation: bounce 0.4s infinite;
 }
 
@@ -197,7 +197,7 @@ body {
 
 .weather {
   position: fixed;
-  bottom: 190px;
+  bottom: 200px;
   left: 40px;
   width: 350px;
   border-radius: 20px;
@@ -205,6 +205,8 @@ body {
   opacity: 0.3;
   transition: opacity 0.5s ease;
   cursor: default;
+  max-height: 650px;
+  overflow-y: scroll;
 }
 
 .glgltz {
@@ -251,6 +253,13 @@ body {
   animation: moveCards 0.8s ease;
 }
 
+.center-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 @keyframes moveCards {
   0% {
     transform: translateY(-60px);
@@ -271,6 +280,10 @@ body {
   font-weight: bold;
   border-bottom: 1px solid white;
   width: fit-content;
+}
+
+.toast-close {
+  opacity: 1 !important;
 }
 
 @media screen and (max-width: 768px) {

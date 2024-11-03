@@ -109,6 +109,8 @@ const RenderAlertsToScreen = (alertsToShow) => {
         stopOnFocus: false, // Prevents dismissing of toast on hover
         style: {
           background: 'linear-gradient(to right, #cb2d3e, #ef473a)',
+          alignItems: 'flex-start',
+          gap: '1rem',
         },
       }).showToast();
   });
@@ -137,7 +139,6 @@ let ids = [];
 let shownData = [];
 const getRedAlert = async () => {
   const res = await fetch(
-    // 'https://dark-gray-snail-ring.cyclic.app/redAlertNotifications'
     'https://mainserver-bhss.onrender.com/redAlertNotifications'
   );
   let data = await res.json();
@@ -162,13 +163,11 @@ setInterval(getRedAlert, 1000);
 
 const getWeather = async () => {
   const res = await fetch(
-    // 'https://dark-gray-snail-ring.cyclic.app/minimal-forecast'
-    // 'https://mainserver-bhss.onrender.com/minimal-forecast'
     'https://express-gcloud-424017.oa.r.appspot.com/minimal-forecast'
   );
   const data = await res.json();
   _weather.innerHTML =
-    '<div style="text-align:center;margin-bottom:1.5rem;"><h1>תחזית מזג אוויר</h1><hr/></div>';
+    '<div style="text-align:center;margin-bottom:1.5rem;"><h1>תחזית מזג אוויר <span><i class="fas fa-cloud-sun"></i></span></h1><hr/></div>';
   _weather.innerHTML += data
     .map(
       (item) =>
@@ -197,15 +196,14 @@ const getData = async () => {
   const lastUpdated = document.querySelector('.last-updated');
   if (lastUpdated)
     lastUpdated.innerHTML = `<div>
-  <span><i class="fas fa-retweet spin-infinite"></i></span>
+  <span><i class="fas fa-retweet bounce-infinite"></i></span>
   מעדכן כעת מבזקים ...</div>`;
   // Clearing all distance setIntervals
   clearDistanceArray.map((item) => clearInterval(item));
   clearDistanceArray = [];
   spinner.style.display = 'block';
   logo.classList.remove('logo-flip');
-  // const res = await fetch('https://dark-gray-snail-ring.cyclic.app/ynet-news');
-  // const res = await fetch('https://mainserver-bhss.onrender.com/ynet-news');
+
   const res = await fetch(
     'https://express-gcloud-424017.oa.r.appspot.com/ynet-news'
   );
@@ -281,6 +279,7 @@ const getData = async () => {
         </a>
         </div>
         `;
+
     const clearDistance = setInterval(() => {
       const distance = document.querySelector(
         `#distance_${item.time.replaceAll(/[-:.]+/g, '_')}`
@@ -289,6 +288,7 @@ const getData = async () => {
         `#watch_${item.time.replaceAll(/[-:.]+/g, '_')}`
       );
 
+      // Comparing if the text changed from the last interval check a second ago
       if (distance.textContent === distanceBetween(item.time)) {
         watch.classList.remove('spin');
         distance.innerHTML = `<span style="color:white">${distanceBetween(
