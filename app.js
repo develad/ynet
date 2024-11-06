@@ -81,7 +81,7 @@ const RenderAlertsToScreen = (alertsToShow) => {
         text: `
     <div style="display:flex;flex-direction: column;width:100%;padding: 0 0.5rem;line-height: 1.2;font-size:1.5rem;gap:0.5rem">
         <div style="display:flex;justify-content: space-between;align-items: center;"><span style="">${moment(
-          new Date(item.time)
+          new Date(item.time - 1000 * 60 * 60)
         )
           .locale('he')
           .format('HH:mm')}${
@@ -222,7 +222,7 @@ const getData = async () => {
     let whatsAppTextStr =
       '*מבזקי Ynet*' +
       '%0a%0a' +
-      item.publish_time +
+      moment(new Date(item.time)).locale('he').format('HH:mm') +
       '%0a%0a' +
       item.headline +
       '%0a%0a' +
