@@ -81,7 +81,8 @@ const RenderAlertsToScreen = (alertsToShow) => {
         text: `
     <div style="display:flex;flex-direction: column;width:100%;padding: 0 0.5rem;line-height: 1.2;font-size:1.5rem;gap:0.5rem">
         <div style="display:flex;justify-content: space-between;align-items: center;"><span style="">${moment(
-          new Date(item.time - 1000 * 60 * 60)
+          // new Date(item.time - 1000 * 60 * 60)
+          new Date(item.time)
         )
           .locale('he')
           .format('HH:mm')}${
