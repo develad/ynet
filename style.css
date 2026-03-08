@@ -342,6 +342,38 @@ body {
   }
 }
 
+@media screen and (max-width: 1368px) and (orientation: landscape) {
+  .arrow-up {
+    height: 60px;
+    width: 60px;
+    font-size: 2em;
+    right: auto;
+    left: 20px;
+    bottom: 20px;
+  }
+}
+@media screen and (max-width: 1000px) and (orientation: landscape) {
+  .arrow-up {
+    height: 60px;
+    width: 60px;
+    font-size: 2em;
+    right: auto;
+    left: 10px;
+    bottom: 10px;
+  }
+}
+
+@media screen and (min-width: 768px) and (orientation: portrait) {
+  .arrow-up {
+    height: 60px;
+    width: 60px;
+    font-size: 2em;
+    right: 10px;
+    left: auto;
+    bottom: 10px;
+  }
+}
+
 @media screen and (max-width: 1480px) {
   .clock,
   .weather,

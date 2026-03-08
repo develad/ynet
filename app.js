@@ -82,7 +82,7 @@ const RenderAlertsToScreen = (alertsToShow) => {
     <div style="display:flex;flex-direction: column;width:100%;padding: 0 0.5rem;line-height: 1.2;font-size:1.5rem;gap:0.5rem">
         <div style="display:flex;justify-content: space-between;align-items: center;"><span style="">${moment(
           // new Date(item.time - 1000 * 60 * 60)
-          new Date(item.time)
+          new Date(item.time),
         )
           .locale('he')
           .format('HH:mm')}${
@@ -140,7 +140,7 @@ let ids = [];
 let shownData = [];
 const getRedAlert = async () => {
   const res = await fetch(
-    'https://mainserver-bhss.onrender.com/redAlertNotifications'
+    'https://mainserver-bhss.onrender.com/redAlertNotifications',
   );
   let data = await res.json();
 
@@ -152,7 +152,7 @@ const getRedAlert = async () => {
   ids = shownData.map((item) => item.notificationId);
 
   const fliterdData = data?.filter(
-    (item) => !ids.includes(item.notificationId)
+    (item) => !ids.includes(item.notificationId),
   );
 
   shownData = [...shownData, ...fliterdData];
@@ -164,7 +164,7 @@ setInterval(getRedAlert, 1000);
 
 const getWeather = async () => {
   const res = await fetch(
-    'https://express-gcloud-424017.oa.r.appspot.com/minimal-forecast'
+    'https://express-gcloud-424017.oa.r.appspot.com/minimal-forecast',
   );
   const data = await res.json();
   _weather.innerHTML =
@@ -178,7 +178,7 @@ const getWeather = async () => {
       </h2>
       <p>${item.hebrewForecast}</p>
     </div>
-    `
+    `,
     )
     .join('<br/>');
 };
@@ -194,11 +194,11 @@ function distanceBetween(time) {
 let clearDistanceArray = [];
 
 const getData = async () => {
-  const lastUpdated = document.querySelector('.last-updated');
-  if (lastUpdated)
-    lastUpdated.innerHTML = `<div>
+  const lastUpdated = document?.querySelector('.last-updated');
+  lastUpdated &&
+    (lastUpdated.innerHTML = `<div>
   <span><i class="fas fa-retweet bounce-infinite"></i></span>
-  מעדכן כעת מבזקים ...</div>`;
+  מעדכן כעת מבזקים ...</div>`);
   // Clearing all distance setIntervals
   clearDistanceArray.map((item) => clearInterval(item));
   clearDistanceArray = [];
@@ -206,41 +206,43 @@ const getData = async () => {
   logo.classList.remove('logo-flip');
 
   const res = await fetch(
-    'https://express-gcloud-424017.oa.r.appspot.com/ynet-news'
+    'https://express-gcloud-424017.oa.r.appspot.com/ynet-news',
   );
-  let data = await res.json();
-  data = data.reverse();
-  spinner.style.display = 'none';
-  logo.classList.add('logo-flip');
-  card.classList.add('move-news-card');
-  card.innerHTML = '';
-  card.innerHTML = `<div class="last-updated">
+  let data = (await res.json()) || [];
+
+  if (data.length !== 0) {
+    data = data.reverse();
+    spinner.style.display = 'none';
+    logo.classList.add('logo-flip');
+    card.classList.add('move-news-card');
+    card.innerHTML = '';
+    card.innerHTML = `<div class="last-updated">
   <span><i class="fas fa-retweet"></i></span>
   עודכן לאחרונה ב ${moment(new Date()).locale('he').format('HH:mm').trim()}
     </div>`;
 
-  data.forEach((item) => {
-    let whatsAppTextStr =
-      '*מבזקי Ynet*' +
-      '%0a%0a' +
-      moment(new Date(item.time)).locale('he').format('HH:mm') +
-      '%0a%0a' +
-      item.headline +
-      '%0a%0a' +
-      item.content +
-      '%0a%0a' +
-      item.link;
-    whatsAppTextStr = whatsAppTextStr
-      .replaceAll('"', '&quot;')
-      .replaceAll('#', '%23');
+    data.forEach((item) => {
+      let whatsAppTextStr =
+        '*מבזקי Ynet*' +
+        '%0a%0a' +
+        moment(new Date(item.time)).locale('he').format('HH:mm') +
+        '%0a%0a' +
+        item.headline +
+        '%0a%0a' +
+        item.content +
+        '%0a%0a' +
+        item.link;
+      whatsAppTextStr = whatsAppTextStr
+        .replaceAll('"', '&quot;')
+        .replaceAll('#', '%23');
 
-    card.innerHTML += `
+      card.innerHTML += `
         <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
           <div style="display:flex;align-items:baseline;gap:0.5rem;">
           <span id="watch_${item.time.replaceAll(
             /[-:.]+/g,
-            '_'
+            '_',
           )}"style="font-size:1rem;"><i class="far fa-clock"></i></span>
           <p id="distance_${item.time.replaceAll(/[-:.]+/g, '_')}">
             <span style="color:#19ffca">${distanceBetween(item.time)}</span>
@@ -281,34 +283,35 @@ const getData = async () => {
         </div>
         `;
 
-    const clearDistance = setInterval(() => {
-      const distance = document.querySelector(
-        `#distance_${item.time.replaceAll(/[-:.]+/g, '_')}`
-      );
-      const watch = document.querySelector(
-        `#watch_${item.time.replaceAll(/[-:.]+/g, '_')}`
-      );
+      const clearDistance = setInterval(() => {
+        const distance = document.querySelector(
+          `#distance_${item.time.replaceAll(/[-:.]+/g, '_')}`,
+        );
+        const watch = document.querySelector(
+          `#watch_${item.time.replaceAll(/[-:.]+/g, '_')}`,
+        );
 
-      // Comparing if the text changed from the last interval check a second ago
-      if (distance.textContent === distanceBetween(item.time)) {
-        watch.classList.remove('spin');
-        distance.innerHTML = `<span style="color:white">${distanceBetween(
-          item.time
-        )}</span>`;
-      } else {
-        watch.classList.add('spin');
-        distance.innerHTML = `<span style="color:#19ffca">${distanceBetween(
-          item.time
-        )}</span>`;
-      }
-    }, 1000);
+        // Comparing if the text changed from the last interval check a second ago
+        if (distance.textContent === distanceBetween(item.time)) {
+          watch.classList.remove('spin');
+          distance.innerHTML = `<span style="color:white">${distanceBetween(
+            item.time,
+          )}</span>`;
+        } else {
+          watch.classList.add('spin');
+          distance.innerHTML = `<span style="color:#19ffca">${distanceBetween(
+            item.time,
+          )}</span>`;
+        }
+      }, 1000);
 
-    clearDistanceArray.push(clearDistance);
-  });
+      clearDistanceArray.push(clearDistance);
+    });
 
-  setTimeout(() => {
-    card.classList.remove('move-news-card');
-  }, 800);
+    setTimeout(() => {
+      card.classList.remove('move-news-card');
+    }, 800);
+  }
 };
 
 window.addEventListener('scroll', () => {
@@ -343,3 +346,5 @@ const clock = () => {
 
 clock();
 setInterval(clock, 1000);
+
+window.addEventListener('focus', getData);
