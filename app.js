@@ -194,123 +194,95 @@ function distanceBetween(time) {
 let clearDistanceArray = [];
 
 const getData = async () => {
-  const lastUpdated = document?.querySelector('.last-updated');
-  lastUpdated &&
-    (lastUpdated.innerHTML = `<div>
-  <span><i class="fas fa-retweet bounce-infinite"></i></span>
-  מעדכן כעת מבזקים ...</div>`);
-  // Clearing all distance setIntervals
-  clearDistanceArray.map((item) => clearInterval(item));
+  const lastUpdated = document.querySelector('.last-updated');
+  if (lastUpdated) {
+    lastUpdated.innerHTML = `<div><span><i class="fas fa-retweet bounce-infinite"></i></span> מעדכן כעת מבזקים ...</div>`;
+  }
+
+  clearDistanceArray.forEach((id) => clearInterval(id));
   clearDistanceArray = [];
   spinner.style.display = 'block';
   logo.classList.remove('logo-flip');
 
-  const res = await fetch(
-    'https://express-gcloud-424017.oa.r.appspot.com/ynet-news',
-  );
-  let data = (await res.json()) || [];
+  try {
+    const res = await fetch(
+      'https://express-gcloud-424017.oa.r.appspot.com/ynet-news',
+    );
+    let data = (await res.json()) || [];
 
-  if (data.length !== 0) {
+    if (data.length === 0) return;
+
     data = data.reverse();
     spinner.style.display = 'none';
     logo.classList.add('logo-flip');
     card.classList.add('move-news-card');
-    card.innerHTML = '';
-    card.innerHTML = `<div class="last-updated">
-  <span><i class="fas fa-retweet"></i></span>
-  עודכן לאחרונה ב ${moment(new Date()).locale('he').format('HH:mm').trim()}
-    </div>`;
 
-    data.forEach((item) => {
-      let whatsAppTextStr =
-        '*מבזקי Ynet*' +
-        '%0a%0a' +
-        moment(new Date(item.time)).locale('he').format('HH:mm') +
-        '%0a%0a' +
-        item.headline +
-        '%0a%0a' +
-        item.content +
-        '%0a%0a' +
-        item.link;
-      whatsAppTextStr = whatsAppTextStr
-        .replaceAll('"', '&quot;')
-        .replaceAll('#', '%23');
+    const timeNow = moment(new Date()).locale('he').format('HH:mm');
 
-      card.innerHTML += `
+    const newsHTML = data
+      .map((item) => {
+        const itemMoment = moment(new Date(item.time)).locale('he');
+        const timeKey = String(item.time).replaceAll(/[-:.T]+/g, '_');
+        const calendarStr = itemMoment.calendar();
+        const isToday = calendarStr.split(' ')[0].includes('היום');
+        const dayPrefix = isToday ? '' : `${calendarStr.split(' ')[0]} | `;
+        const formattedTime = itemMoment.format('HH:mm');
+
+        let whatsAppText = `*מבזקי Ynet*%0a%0a${formattedTime}%0a%0a${item.headline}%0a%0a${item.content}%0a%0a${item.link}`;
+        whatsAppText = whatsAppText
+          .replaceAll('"', '&quot;')
+          .replaceAll('#', '%23');
+
+        return `
         <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
-          <div style="display:flex;align-items:baseline;gap:0.5rem;">
-          <span id="watch_${item.time.replaceAll(
-            /[-:.]+/g,
-            '_',
-          )}"style="font-size:1rem;"><i class="far fa-clock"></i></span>
-          <p id="distance_${item.time.replaceAll(/[-:.]+/g, '_')}">
-            <span style="color:#19ffca">${distanceBetween(item.time)}</span>
-            </p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+            <div style="display:flex;align-items:baseline;gap:0.5rem;">
+              <span id="watch_${timeKey}" style="font-size:1rem;"><i class="far fa-clock"></i></span>
+              <p id="distance_${timeKey}">
+                <span style="color:#19ffca">${distanceBetween(item.time)}</span>
+              </p>
+            </div>
+            <p>${dayPrefix}${formattedTime}</p>
           </div>
-          <p>
-            ${
-              moment(new Date(item.time))
-                .locale('he')
-                .calendar()
-                .split(' ')[0]
-                .includes('היום')
-                ? ''
-                : `${
-                    moment(new Date(item.time))
-                      .locale('he')
-                      .calendar()
-                      .split(' ')[0]
-                  } | `
-            }
-            ${moment(new Date(item.time)).locale('he').format('HH:mm')} 
-            </p>
-        </div>
-        <h1>${item.headline}</h1>
-        <h3>${item.content}</h3>
-       <div style="margin-top:1rem;display: flex;align-items:center;justify-content: end;margin-bottom:-0.50rem;
-       ">
-        <a
-          style="color: inherit; text-decoration: none;background:rgba(128, 128, 128, 0.3);border-radius:50%;padding:20px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;"
-          href="https://api.whatsapp.com/send?text=${whatsAppTextStr}"
-          
-          target="_blank"
-          ><span
-            style="font-size: 1.4rem; color: greenyellow"
-            ><i class="fab fa-whatsapp"></i
-          ></span>
-        </a>
-        </div>
-        `;
+          <h1>${item.headline}</h1>
+          <h3>${item.content}</h3>
+          <div style="margin-top:1rem;display:flex;align-items:center;justify-content:end;margin-bottom:-0.50rem;">
+            <a
+              style="color:inherit;text-decoration:none;background:rgba(128,128,128,0.3);border-radius:50%;padding:20px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;"
+              href="https://api.whatsapp.com/send?text=${whatsAppText}"
+              target="_blank"
+            ><span style="font-size:1.4rem;color:greenyellow"><i class="fab fa-whatsapp"></i></span></a>
+          </div>
+        </div>`;
+      })
+      .join('');
 
-      const clearDistance = setInterval(() => {
-        const distance = document.querySelector(
-          `#distance_${item.time.replaceAll(/[-:.]+/g, '_')}`,
-        );
-        const watch = document.querySelector(
-          `#watch_${item.time.replaceAll(/[-:.]+/g, '_')}`,
-        );
+    // Set innerHTML once instead of appending per item (avoids repeated DOM thrashing)
+    card.innerHTML = `
+      <div class="last-updated">
+        <span><i class="fas fa-retweet"></i></span>
+        עודכן לאחרונה ב ${timeNow}
+      </div>${newsHTML}`;
 
-        // Comparing if the text changed from the last interval check a second ago
-        if (distance.textContent === distanceBetween(item.time)) {
-          watch.classList.remove('spin');
-          distance.innerHTML = `<span style="color:white">${distanceBetween(
-            item.time,
-          )}</span>`;
-        } else {
-          watch.classList.add('spin');
-          distance.innerHTML = `<span style="color:#19ffca">${distanceBetween(
-            item.time,
-          )}</span>`;
-        }
-      }, 1000);
+    // Single interval updates all item distances (instead of one per item)
+    const clearDistance = setInterval(() => {
+      data.forEach((item) => {
+        const timeKey = String(item.time).replaceAll(/[-:.T]+/g, '_');
+        const distance = document.querySelector(`#distance_${timeKey}`);
+        const watch = document.querySelector(`#watch_${timeKey}`);
+        if (!distance || !watch) return;
 
-      clearDistanceArray.push(clearDistance);
-    });
+        const newText = distanceBetween(item.time);
+        const changed = distance.textContent.trim() !== newText;
+        watch.classList.toggle('spin', changed);
+        distance.innerHTML = `<span style="color:${changed ? '#19ffca' : 'white'}">${newText}</span>`;
+      });
+    }, 1000);
+    clearDistanceArray.push(clearDistance);
 
-    setTimeout(() => {
-      card.classList.remove('move-news-card');
-    }, 800);
+    setTimeout(() => card.classList.remove('move-news-card'), 800);
+  } catch (_e) {
+    spinner.style.display = 'none';
   }
 };
 
