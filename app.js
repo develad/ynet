@@ -191,6 +191,16 @@ function distanceBetween(time) {
   return moment(time_before).locale('he').fromNow();
 }
 
+function formatRelativeDate(date) {
+  const m = moment(date);
+
+  if (m.isSame(moment(), 'day')) return '';
+  if (m.isSame(moment().subtract(1, 'days'), 'day')) return 'אתמול';
+
+  const daysAgo = moment().diff(m, 'days', true); // If true, returns a floating point number instead of an integer.
+  return `לפני ${Math.ceil(daysAgo)} ימים`;
+}
+
 let clearDistanceArray = [];
 
 const getData = async () => {
@@ -223,9 +233,11 @@ const getData = async () => {
       .map((item) => {
         const itemMoment = moment(new Date(item.time)).locale('he');
         const timeKey = String(item.time).replaceAll(/[-:.T]+/g, '_');
-        const calendarStr = itemMoment.calendar();
-        const isToday = calendarStr.split(' ')[0].includes('היום');
-        const dayPrefix = isToday ? '' : `${calendarStr.split(' ')[0]} | `;
+        const dayPrefix =
+          formatRelativeDate(item.time) === ''
+            ? ''
+            : `${formatRelativeDate(item.time)} | `;
+
         const formattedTime = itemMoment.format('HH:mm');
 
         let whatsAppText = `*מבזקי Ynet*%0a%0a${formattedTime}%0a%0a${item.headline}%0a%0a${item.content}%0a%0a${item.link}`;
